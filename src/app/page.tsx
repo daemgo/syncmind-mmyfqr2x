@@ -25,7 +25,7 @@ export default function Home() {
               syncMind CRM
             </div>
             <h1 className="text-5xl md:text-7xl font-serif font-medium tracking-tight">
-              <span className="text-gradient">智能</span>客户管理
+              AI 客户管理
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto leading-relaxed">
               数据驱动的客户关系管理，让每个销售动作都有据可依
