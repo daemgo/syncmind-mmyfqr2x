@@ -1,0 +1,609 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "name": "CRM 客户关系管理系统",
+    "description": "面向销售团队的客户关系管理系统，支持客户管理、联系人管理、销售机会跟踪和项目管理",
+    "createdAt": "2026-03-20T00:00:00Z",
+    "updatedAt": "2026-03-20T00:00:00Z",
+    "status": "draft",
+    "sourceRequirements": "1.0.0"
+  },
+  "overview": {
+    "background": "销售团队需要统一的客户管理平台，将分散在 Excel 和微信群中的客户信息集中管理，提升销售协作效率和跟进质量。",
+    "goals": [
+      "统一管理客户信息，减少信息散落",
+      "跟踪销售机会全流程，提高成交率",
+      "管理联系人和沟通记录，避免关系断层",
+      "项目交付可视化，保障交付质量"
+    ],
+    "targetUsers": [
+      {
+        "role": "销售人员",
+        "description": "一线销售，负责客户开发和商机推进",
+        "needs": ["快速查找客户", "跟踪商机进度", "记录拜访信息"]
+      },
+      {
+        "role": "销售经理",
+        "description": "管理销售团队，把控整体业绩",
+        "needs": ["查看销售漏斗", "分析成交数据", "监控团队进度"]
+      }
+    ],
+    "scope": {
+      "included": ["仪表盘", "客户管理", "联系人管理", "销售机会管理", "项目管理"],
+      "excluded": ["财务对账", "合同管理", "移动端 App", "邮件自动化"]
+    }
+  },
+  "architecture": {
+    "sitemap": [
+      {
+        "id": "dashboard",
+        "name": "仪表盘",
+        "route": "/dashboard",
+        "icon": "layout-dashboard"
+      },
+      {
+        "id": "customers",
+        "name": "客户管理",
+        "route": "/customers",
+        "icon": "users"
+      },
+      {
+        "id": "opportunities",
+        "name": "销售机会",
+        "route": "/opportunities",
+        "icon": "target",
+        "children": [
+          { "id": "opp-list", "name": "机会列表", "route": "/opportunities" },
+          { "id": "opp-create", "name": "新建机会", "route": "/opportunities/create" }
+        ]
+      },
+      {
+        "id": "contacts",
+        "name": "联系人",
+        "route": "/contacts",
+        "icon": "user",
+        "children": [
+          { "id": "contact-list", "name": "联系人列表", "route": "/contacts" },
+          { "id": "contact-create", "name": "新建联系人", "route": "/contacts/create" }
+        ]
+      },
+      {
+        "id": "projects",
+        "name": "项目管理",
+        "route": "/projects",
+        "icon": "folder-kanban",
+        "children": [
+          { "id": "project-list", "name": "项目列表", "route": "/projects" },
+          { "id": "project-detail", "name": "项目详情", "route": "/projects/:id" }
+        ]
+      }
+    ]
+  },
+  "modules": [
+    {
+      "id": "dashboard",
+      "name": "仪表盘",
+      "description": "销售数据概览，包含销售漏斗、关键指标和最近更新",
+      "locked": false,
+      "pages": [
+        {
+          "id": "dashboard-page",
+          "name": "仪表盘首页",
+          "route": "/dashboard",
+          "description": "展示销售核心指标和快速入口",
+          "locked": false,
+          "layout": "dashboard",
+          "sections": [
+            {
+              "id": "stats-cards",
+              "name": "指标卡片",
+              "type": "statistic",
+              "description": "销售机会数、成交数、漏斗金额、联系人数"
+            },
+            {
+              "id": "pipeline-chart",
+              "name": "销售漏斗分布",
+              "type": "chart",
+              "description": "按阶段展示商机分布",
+              "config": { "chartType": "bar" }
+            },
+            {
+              "id": "recent-updates",
+              "name": "最近更新",
+              "type": "cards",
+              "description": "最近更新的 5 个销售机会"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "customer-management",
+      "name": "客户管理",
+      "description": "客户档案管理，读取 docs/customers 中的客户数据展示",
+      "locked": false,
+      "pages": [
+        {
+          "id": "customer-list",
+          "name": "客户列表",
+          "route": "/customers",
+          "description": "以卡片形式展示客户档案",
+          "locked": false,
+          "layout": "list",
+          "sections": [
+            {
+              "id": "customer-search",
+              "name": "搜索栏",
+              "type": "form",
+              "description": "按客户名称搜索",
+              "fields": [
+                {
+                  "id": "f-search",
+                  "name": "搜索",
+                  "fieldKey": "search",
+                  "type": "text",
+                  "required": false,
+                  "placeholder": "搜索客户..."
+                }
+              ],
+              "config": { "layout": "inline" }
+            },
+            {
+              "id": "customer-cards",
+              "name": "客户卡片",
+              "type": "cards",
+              "description": "客户信息卡片列表，展示公司名、行业、规模、评级、状态"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "opportunity-management",
+      "name": "销售机会管理",
+      "description": "销售机会全生命周期管理，从初步接触到赢单/输单",
+      "locked": false,
+      "pages": [
+        {
+          "id": "opportunity-list",
+          "name": "机会列表",
+          "route": "/opportunities",
+          "description": "以表格形式展示所有销售机会",
+          "locked": false,
+          "layout": "list",
+          "sections": [
+            {
+              "id": "opp-filter",
+              "name": "筛选条件",
+              "type": "form",
+              "description": "搜索和阶段筛选",
+              "fields": [
+                {
+                  "id": "f-opp-search",
+                  "name": "搜索",
+                  "fieldKey": "search",
+                  "type": "text",
+                  "required": false,
+                  "placeholder": "搜索机会名称或客户..."
+                },
+                {
+                  "id": "f-opp-stage",
+                  "name": "阶段",
+                  "fieldKey": "stage",
+                  "type": "select",
+                  "required": false,
+                  "optionSource": "dict-opportunity-stage"
+                }
+              ],
+              "config": { "layout": "inline" }
+            },
+            {
+              "id": "opp-table",
+              "name": "机会表格",
+              "type": "table",
+              "description": "机会数据表格",
+              "columns": [
+                { "id": "c-name", "name": "机会名称", "fieldKey": "opportunityName", "type": "link" },
+                { "id": "c-account", "name": "客户", "fieldKey": "accountName", "type": "text" },
+                { "id": "c-stage", "name": "阶段", "fieldKey": "stage", "type": "status" },
+                { "id": "c-value", "name": "金额", "fieldKey": "value", "type": "money" },
+                { "id": "c-prob", "name": "概率", "fieldKey": "probability", "type": "text" },
+                { "id": "c-close", "name": "预计成交", "fieldKey": "expectedCloseDate", "type": "date" },
+                { "id": "c-contact", "name": "负责人", "fieldKey": "contactName", "type": "text" },
+                { "id": "c-action", "name": "操作", "fieldKey": "action", "type": "action", "fixed": "right" }
+              ],
+              "actions": [
+                {
+                  "id": "a-opp-create",
+                  "name": "新建机会",
+                  "type": "primary",
+                  "position": "toolbar-left",
+                  "behavior": { "type": "navigate", "target": "/opportunities/create", "description": "跳转到新建页" }
+                },
+                {
+                  "id": "a-opp-view",
+                  "name": "详情",
+                  "type": "link",
+                  "position": "row",
+                  "behavior": { "type": "navigate", "target": "/opportunities/{id}", "description": "查看详情" }
+                }
+              ],
+              "config": { "pagination": false }
+            }
+          ]
+        },
+        {
+          "id": "opportunity-create",
+          "name": "新建机会",
+          "route": "/opportunities/create",
+          "description": "创建新的销售机会",
+          "locked": false,
+          "layout": "form",
+          "sections": [
+            {
+              "id": "opp-form",
+              "name": "基本信息",
+              "type": "form",
+              "description": "机会基本信息表单",
+              "fields": [
+                { "id": "f-oname", "name": "机会名称", "fieldKey": "opportunityName", "type": "text", "required": true, "placeholder": "例如：ERP系统升级项目" },
+                { "id": "f-oaccount", "name": "客户名称", "fieldKey": "accountName", "type": "text", "required": true },
+                { "id": "f-ocontact", "name": "联系人", "fieldKey": "contactName", "type": "text", "required": false },
+                { "id": "f-ostage", "name": "阶段", "fieldKey": "stage", "type": "select", "required": true, "optionSource": "dict-opportunity-stage" },
+                { "id": "f-ovalue", "name": "金额", "fieldKey": "value", "type": "money", "required": true },
+                { "id": "f-ocurrency", "name": "货币", "fieldKey": "currency", "type": "select", "required": false },
+                { "id": "f-odate", "name": "预计成交日期", "fieldKey": "expectedCloseDate", "type": "date", "required": true },
+                { "id": "f-osource", "name": "来源", "fieldKey": "source", "type": "text", "required": false },
+                { "id": "f-odesc", "name": "描述", "fieldKey": "description", "type": "textarea", "required": false }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "opportunity-detail",
+          "name": "机会详情",
+          "route": "/opportunities/:id",
+          "description": "查看机会详细信息、销售流程和活动记录",
+          "locked": false,
+          "layout": "detail",
+          "sections": [
+            {
+              "id": "opp-info",
+              "name": "基本信息",
+              "type": "description",
+              "description": "阶段、概率、金额、预计成交日期"
+            },
+            {
+              "id": "opp-progress",
+              "name": "销售流程",
+              "type": "steps",
+              "description": "阶段进度可视化"
+            },
+            {
+              "id": "opp-timeline",
+              "name": "活动记录",
+              "type": "timeline",
+              "description": "操作和更新时间线"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contact-management",
+      "name": "联系人管理",
+      "description": "管理客户联系人信息和沟通偏好",
+      "locked": false,
+      "pages": [
+        {
+          "id": "contact-list",
+          "name": "联系人列表",
+          "route": "/contacts",
+          "description": "以表格形式展示联系人",
+          "locked": false,
+          "layout": "list",
+          "sections": [
+            {
+              "id": "contact-filter",
+              "name": "筛选条件",
+              "type": "form",
+              "description": "搜索、状态和重要性筛选",
+              "fields": [
+                { "id": "f-csearch", "name": "搜索", "fieldKey": "search", "type": "text", "required": false, "placeholder": "搜索联系人、邮箱或客户..." },
+                { "id": "f-cstatus", "name": "状态", "fieldKey": "status", "type": "select", "required": false, "optionSource": "dict-contact-status" },
+                { "id": "f-cimportance", "name": "重要性", "fieldKey": "importance", "type": "select", "required": false, "optionSource": "dict-contact-importance" }
+              ],
+              "config": { "layout": "inline" }
+            },
+            {
+              "id": "contact-table",
+              "name": "联系人表格",
+              "type": "table",
+              "description": "联系人数据表格",
+              "columns": [
+                { "id": "c-cname", "name": "姓名", "fieldKey": "fullName", "type": "link" },
+                { "id": "c-ctitle", "name": "职位", "fieldKey": "title", "type": "text" },
+                { "id": "c-caccount", "name": "客户", "fieldKey": "accountName", "type": "link" },
+                { "id": "c-cemail", "name": "邮箱", "fieldKey": "email", "type": "text" },
+                { "id": "c-cphone", "name": "电话", "fieldKey": "mobile", "type": "text" },
+                { "id": "c-cimportance", "name": "重要性", "fieldKey": "importance", "type": "tag" },
+                { "id": "c-cstatus", "name": "状态", "fieldKey": "status", "type": "status" },
+                { "id": "c-clast", "name": "最后联系", "fieldKey": "lastContactDate", "type": "date" },
+                { "id": "c-caction", "name": "操作", "fieldKey": "action", "type": "action", "fixed": "right" }
+              ],
+              "actions": [
+                {
+                  "id": "a-c-create",
+                  "name": "新建联系人",
+                  "type": "primary",
+                  "position": "toolbar-left",
+                  "behavior": { "type": "navigate", "target": "/contacts/create", "description": "跳转到新建页" }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "contact-create",
+          "name": "新建联系人",
+          "route": "/contacts/create",
+          "description": "创建新的联系人",
+          "locked": false,
+          "layout": "form",
+          "sections": [
+            {
+              "id": "contact-form-basic",
+              "name": "基本信息",
+              "type": "form",
+              "description": "姓名、职位、部门、客户",
+              "fields": [
+                { "id": "f-clast", "name": "姓氏", "fieldKey": "lastName", "type": "text", "required": true },
+                { "id": "f-cfirst", "name": "名字", "fieldKey": "firstName", "type": "text", "required": true },
+                { "id": "f-ctitle", "name": "职位", "fieldKey": "title", "type": "text", "required": true },
+                { "id": "f-cdept", "name": "部门", "fieldKey": "department", "type": "text", "required": false },
+                { "id": "f-cacct", "name": "客户", "fieldKey": "accountName", "type": "text", "required": false }
+              ]
+            },
+            {
+              "id": "contact-form-info",
+              "name": "联系信息",
+              "type": "form",
+              "description": "邮箱、电话、手机、微信",
+              "fields": [
+                { "id": "f-cemail", "name": "邮箱", "fieldKey": "email", "type": "email", "required": true },
+                { "id": "f-cphone", "name": "电话", "fieldKey": "phone", "type": "phone", "required": false },
+                { "id": "f-cmobile", "name": "手机", "fieldKey": "mobile", "type": "phone", "required": false },
+                { "id": "f-cwechat", "name": "微信", "fieldKey": "wechat", "type": "text", "required": false }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "contact-detail",
+          "name": "联系人详情",
+          "route": "/contacts/:id",
+          "description": "联系人详细信息",
+          "locked": false,
+          "layout": "detail",
+          "sections": [
+            {
+              "id": "contact-info-detail",
+              "name": "联系信息",
+              "type": "card",
+              "description": "邮箱、电话、手机、微信、地址"
+            },
+            {
+              "id": "contact-professional",
+              "name": "职业信息",
+              "type": "description",
+              "description": "职位、部门、公司"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "project-management",
+      "name": "项目管理",
+      "description": "已签约项目的交付跟踪，管理项目进度、里程碑和团队",
+      "locked": false,
+      "pages": [
+        {
+          "id": "project-list",
+          "name": "项目列表",
+          "route": "/projects",
+          "description": "以表格形式展示所有项目",
+          "locked": false,
+          "layout": "list",
+          "sections": [
+            {
+              "id": "project-filter",
+              "name": "筛选条件",
+              "type": "form",
+              "description": "搜索和状态筛选",
+              "fields": [
+                { "id": "f-psearch", "name": "搜索", "fieldKey": "search", "type": "text", "required": false, "placeholder": "搜索项目名称或客户..." },
+                { "id": "f-pstatus", "name": "状态", "fieldKey": "status", "type": "select", "required": false, "optionSource": "dict-project-status" }
+              ],
+              "config": { "layout": "inline" }
+            },
+            {
+              "id": "project-table",
+              "name": "项目表格",
+              "type": "table",
+              "description": "项目数据表格",
+              "columns": [
+                { "id": "c-pname", "name": "项目名称", "fieldKey": "name", "type": "link" },
+                { "id": "c-pclient", "name": "客户", "fieldKey": "clientName", "type": "text" },
+                { "id": "c-pstatus", "name": "状态", "fieldKey": "status", "type": "status" },
+                { "id": "c-pprogress", "name": "进度", "fieldKey": "progress", "type": "progress" },
+                { "id": "c-pmanager", "name": "项目经理", "fieldKey": "manager", "type": "text" },
+                { "id": "c-pstart", "name": "开始日期", "fieldKey": "startDate", "type": "date" },
+                { "id": "c-pend", "name": "截止日期", "fieldKey": "endDate", "type": "date" },
+                { "id": "c-paction", "name": "操作", "fieldKey": "action", "type": "action", "fixed": "right" }
+              ],
+              "actions": [
+                {
+                  "id": "a-p-view",
+                  "name": "详情",
+                  "type": "link",
+                  "position": "row",
+                  "behavior": { "type": "navigate", "target": "/projects/{id}", "description": "查看项目详情" }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "project-detail",
+          "name": "项目详情",
+          "route": "/projects/:id",
+          "description": "项目详细信息、里程碑和团队",
+          "locked": false,
+          "layout": "detail",
+          "sections": [
+            {
+              "id": "project-overview",
+              "name": "项目概览",
+              "type": "description",
+              "description": "项目名称、客户、状态、进度、金额"
+            },
+            {
+              "id": "project-milestones",
+              "name": "里程碑",
+              "type": "timeline",
+              "description": "项目里程碑时间线"
+            },
+            {
+              "id": "project-team",
+              "name": "项目团队",
+              "type": "cards",
+              "description": "团队成员信息卡片"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "globalRules": {
+    "roles": [
+      {
+        "id": "admin",
+        "name": "管理员",
+        "description": "系统管理员，拥有全部权限",
+        "permissions": [
+          { "module": "*", "actions": ["*"], "dataScope": "all" }
+        ]
+      },
+      {
+        "id": "sales",
+        "name": "销售人员",
+        "description": "一线销售",
+        "permissions": [
+          { "module": "dashboard", "actions": ["view"], "dataScope": "self" },
+          { "module": "customer-management", "actions": ["view"], "dataScope": "all" },
+          { "module": "opportunity-management", "actions": ["view", "create", "edit"], "dataScope": "self" },
+          { "module": "contact-management", "actions": ["view", "create", "edit"], "dataScope": "all" },
+          { "module": "project-management", "actions": ["view"], "dataScope": "self" }
+        ]
+      },
+      {
+        "id": "manager",
+        "name": "销售经理",
+        "description": "管理销售团队",
+        "permissions": [
+          { "module": "*", "actions": ["view"], "dataScope": "all" },
+          { "module": "opportunity-management", "actions": ["view", "create", "edit", "delete"], "dataScope": "all" }
+        ]
+      }
+    ],
+    "dictionary": [
+      {
+        "id": "dict-opportunity-stage",
+        "name": "销售阶段",
+        "category": "opportunity",
+        "items": [
+          { "label": "初步接触", "value": "prospecting", "color": "gray" },
+          { "label": "需求确认", "value": "qualification", "color": "blue" },
+          { "label": "方案报价", "value": "proposal", "color": "yellow" },
+          { "label": "商务谈判", "value": "negotiation", "color": "orange" },
+          { "label": "赢单", "value": "closed-won", "color": "green" },
+          { "label": "输单", "value": "closed-lost", "color": "red" }
+        ]
+      },
+      {
+        "id": "dict-contact-status",
+        "name": "联系人状态",
+        "category": "contact",
+        "items": [
+          { "label": "活跃", "value": "active", "color": "green" },
+          { "label": "非活跃", "value": "inactive", "color": "gray" },
+          { "label": "已屏蔽", "value": "blocked", "color": "red" }
+        ]
+      },
+      {
+        "id": "dict-contact-importance",
+        "name": "联系人重要性",
+        "category": "contact",
+        "items": [
+          { "label": "高", "value": "high", "color": "red" },
+          { "label": "中", "value": "medium", "color": "yellow" },
+          { "label": "低", "value": "low", "color": "gray" }
+        ]
+      },
+      {
+        "id": "dict-project-status",
+        "name": "项目状态",
+        "category": "project",
+        "items": [
+          { "label": "规划中", "value": "planning", "color": "gray" },
+          { "label": "进行中", "value": "in-progress", "color": "blue" },
+          { "label": "已暂停", "value": "on-hold", "color": "yellow" },
+          { "label": "已完成", "value": "completed", "color": "green" },
+          { "label": "已取消", "value": "cancelled", "color": "red" }
+        ]
+      }
+    ],
+    "statusFlows": [
+      {
+        "id": "opportunity-flow",
+        "entity": "销售机会",
+        "description": "销售机会阶段流转",
+        "statuses": [
+          { "id": "prospecting", "name": "初步接触", "color": "gray", "description": "初次接触客户" },
+          { "id": "qualification", "name": "需求确认", "color": "blue", "description": "确认客户需求" },
+          { "id": "proposal", "name": "方案报价", "color": "yellow", "description": "提交方案和报价" },
+          { "id": "negotiation", "name": "商务谈判", "color": "orange", "description": "商务条件谈判" },
+          { "id": "closed-won", "name": "赢单", "color": "green", "description": "成功签约" },
+          { "id": "closed-lost", "name": "输单", "color": "red", "description": "未能签约" }
+        ],
+        "transitions": [
+          { "from": "prospecting", "to": "qualification", "action": "确认需求", "actor": "销售人员" },
+          { "from": "qualification", "to": "proposal", "action": "提交方案", "actor": "销售人员" },
+          { "from": "proposal", "to": "negotiation", "action": "进入谈判", "actor": "销售人员" },
+          { "from": "negotiation", "to": "closed-won", "action": "签约", "actor": "销售经理" },
+          { "from": "negotiation", "to": "closed-lost", "action": "输单", "actor": "销售人员" }
+        ]
+      },
+      {
+        "id": "project-flow",
+        "entity": "项目",
+        "description": "项目状态流转",
+        "statuses": [
+          { "id": "planning", "name": "规划中", "color": "gray", "description": "项目启动和规划" },
+          { "id": "in-progress", "name": "进行中", "color": "blue", "description": "项目执行中" },
+          { "id": "on-hold", "name": "已暂停", "color": "yellow", "description": "项目暂停" },
+          { "id": "completed", "name": "已完成", "color": "green", "description": "项目交付完成" },
+          { "id": "cancelled", "name": "已取消", "color": "red", "description": "项目取消" }
+        ],
+        "transitions": [
+          { "from": "planning", "to": "in-progress", "action": "启动项目", "actor": "项目经理" },
+          { "from": "in-progress", "to": "on-hold", "action": "暂停", "actor": "项目经理" },
+          { "from": "on-hold", "to": "in-progress", "action": "恢复", "actor": "项目经理" },
+          { "from": "in-progress", "to": "completed", "action": "验收通过", "actor": "项目经理" },
+          { "from": "planning", "to": "cancelled", "action": "取消", "actor": "销售经理" }
+        ]
+      }
+    ]
+  }
+}
