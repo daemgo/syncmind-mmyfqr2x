@@ -1,14 +1,10 @@
+import { AppLayout } from "@/components/layout/app-layout";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
 import fs from "fs";
 import path from "path";
 import Link from "next/link";
@@ -73,27 +69,37 @@ export default function CustomersPage() {
   const { customers } = index;
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-serif font-medium tracking-wide">
-                客户档案
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                管理和查看所有客户的数字化档案
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <Input placeholder="搜索客户..." className="w-64" />
-              <Button>新建客户</Button>
-            </div>
+    <AppLayout>
+      <div className="space-y-6 p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-serif font-medium tracking-wide">
+              客户档案
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              管理和查看所有客户的数字化档案
+            </p>
           </div>
+          <Button>新建客户</Button>
         </div>
-      </div>
 
-      <div className="container mx-auto px-4 py-8">
+        {/* Search */}
+        <Card>
+          <CardContent className="pt-6">
+            <div className="max-w-sm">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="搜索客户..."
+                  className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Customer List */}
         {customers.length === 0 ? (
           <Card className="p-12">
             <CardContent className="flex flex-col items-center justify-center text-center space-y-4">
@@ -116,32 +122,31 @@ export default function CustomersPage() {
                 key={customer.id}
                 className="group hover:shadow-md transition-shadow cursor-pointer"
               >
-                <CardHeader>
+                <CardContent className="p-6 space-y-4">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
-                      <CardTitle className="text-lg truncate">
+                      <h3 className="text-lg font-medium truncate group-hover:text-primary transition-colors">
                         {customer.shortName}
-                      </CardTitle>
-                      <CardDescription className="truncate mt-1">
+                      </h3>
+                      <p className="text-sm text-muted-foreground truncate mt-1">
                         {customer.companyName}
-                      </CardDescription>
+                      </p>
                     </div>
                     <Badge variant={getStatusVariant(customer.status)}>
                       {customer.status}
                     </Badge>
                   </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
+
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center justify-between">
                       <span className="text-muted-foreground">行业</span>
                       <span>{customer.industry}</span>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center justify-between">
                       <span className="text-muted-foreground">规模</span>
                       <span>{customer.scale}</span>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center justify-between">
                       <span className="text-muted-foreground">评级</span>
                       <span
                         className={`font-medium ${getRatingColor(customer.rating)}`}
@@ -150,8 +155,8 @@ export default function CustomersPage() {
                       </span>
                     </div>
                   </div>
-                  <Separator />
-                  <div className="text-xs text-muted-foreground space-y-1">
+
+                  <div className="pt-4 border-t text-xs text-muted-foreground space-y-1">
                     <div className="flex justify-between">
                       <span>创建于</span>
                       <span>
@@ -169,6 +174,7 @@ export default function CustomersPage() {
                       </span>
                     </div>
                   </div>
+
                   <Button variant="outline" className="w-full" asChild>
                     <Link href={`/customers/${customer.id}`}>查看详情 →</Link>
                   </Button>
@@ -178,6 +184,6 @@ export default function CustomersPage() {
           </div>
         )}
       </div>
-    </div>
+    </AppLayout>
   );
 }

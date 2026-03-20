@@ -15,24 +15,18 @@ export default function Home() {
       <div className="container mx-auto px-4 py-20">
         <div className="max-w-3xl mx-auto text-center space-y-6">
           <h1 className="text-5xl md:text-6xl font-serif font-medium tracking-wide">
-            欢迎使用 syncMind
+            CRM Demo
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground font-light">
-            AI 驱动的企业客户数字化档案管理系统
+            客户关系管理系统演示
           </p>
           <div className="flex items-center justify-center gap-4 pt-4">
-            <Link href="/customers">
-              <Button size="lg">查看客户档案</Button>
+            <Link href="/dashboard">
+              <Button size="lg">进入系统</Button>
             </Link>
-            <Button size="lg" variant="outline" asChild>
-              <a
-                href="https://docs.anthropic.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                了解更多
-              </a>
-            </Button>
+            <Link href="/customers">
+              <Button size="lg" variant="outline">查看客户</Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -43,9 +37,9 @@ export default function Home() {
           <Card>
             <CardHeader>
               <div className="text-4xl mb-2">🎯</div>
-              <CardTitle>深度企业洞察</CardTitle>
+              <CardTitle>仪表盘</CardTitle>
               <CardDescription>
-                基于工商信息、政策信号、行业痛点等多维度数据分析
+                销售漏斗可视化、机会概览和关键指标一目了然
               </CardDescription>
             </CardHeader>
           </Card>
@@ -53,19 +47,19 @@ export default function Home() {
           <Card>
             <CardHeader>
               <div className="text-4xl mb-2">🚀</div>
-              <CardTitle>销售进攻指南</CardTitle>
+              <CardTitle>销售机会</CardTitle>
               <CardDescription>
-                破冰话术、竞对分析、访谈提纲，助力面客准备
+                跟踪销售机会全生命周期，从初步接触到成交
               </CardDescription>
             </CardHeader>
           </Card>
 
           <Card>
             <CardHeader>
-              <div className="text-4xl mb-2">📊</div>
-              <CardTitle>可视化档案</CardTitle>
+              <div className="text-4xl mb-2">👥</div>
+              <CardTitle>联系人管理</CardTitle>
               <CardDescription>
-                结构化数据展示，方便浏览和管理所有客户信息
+                管理客户联系人信息，记录沟通历史和偏好
               </CardDescription>
             </CardHeader>
           </Card>
@@ -75,49 +69,64 @@ export default function Home() {
       {/* Quick Actions Section */}
       <div className="container mx-auto px-4 py-16">
         <h2 className="text-2xl font-serif font-medium text-center mb-8">
-          快速开始
+          功能模块
         </h2>
         <div className="max-w-2xl mx-auto space-y-4">
-          <Card
-            className="hover:shadow-md transition-shadow cursor-pointer"
-            asChild
-          >
-            <Link href="/customers">
+          <Link href="/dashboard">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
               <CardContent className="flex items-center justify-between p-6">
                 <div>
-                  <h3 className="font-medium mb-1">浏览客户档案</h3>
+                  <h3 className="font-medium mb-1">仪表盘</h3>
                   <p className="text-sm text-muted-foreground">
-                    查看和管理所有客户的数字化档案
+                    查看销售漏斗、机会概览和关键指标
                   </p>
                 </div>
                 <span className="text-muted-foreground">→</span>
               </CardContent>
-            </Link>
-          </Card>
+            </Card>
+          </Link>
 
-          <Card className="hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <h3 className="font-medium mb-1">创建新客户档案</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                使用{" "}
-                <code className="bg-muted px-2 py-1 rounded text-xs">
-                  /profile
-                </code>{" "}
-                skill 创建新的客户档案
-              </p>
-              <div className="bg-muted/50 rounded-lg p-4 text-sm space-y-2">
-                <div className="font-medium">支持分析维度：</div>
-                <ul className="space-y-1 text-muted-foreground">
-                  <li>• 工商信息深度解读（企查查/天眼查）</li>
-                  <li>• 政策敏感度分析（专精特新、数字化转型）</li>
-                  <li>• 10+ 行业痛点库匹配</li>
-                  <li>• 时机判断（融资、扩张、转型、危机）</li>
-                  <li>• 信用/风险信号检查</li>
-                  <li>• 组织架构与决策链条推断</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
+          <Link href="/customers">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="flex items-center justify-between p-6">
+                <div>
+                  <h3 className="font-medium mb-1">客户管理</h3>
+                  <p className="text-sm text-muted-foreground">
+                    浏览和管理所有客户的数字化档案
+                  </p>
+                </div>
+                <span className="text-muted-foreground">→</span>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/opportunities">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="flex items-center justify-between p-6">
+                <div>
+                  <h3 className="font-medium mb-1">销售机会</h3>
+                  <p className="text-sm text-muted-foreground">
+                    跟踪和管理销售机会的全生命周期
+                  </p>
+                </div>
+                <span className="text-muted-foreground">→</span>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/contacts">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="flex items-center justify-between p-6">
+                <div>
+                  <h3 className="font-medium mb-1">联系人</h3>
+                  <p className="text-sm text-muted-foreground">
+                    管理客户联系人和沟通记录
+                  </p>
+                </div>
+                <span className="text-muted-foreground">→</span>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,16 +1,16 @@
 {
   "project": {
-    "name": "",
-    "description": "",
-    "type": ""
+    "name": "CRM系统",
+    "description": "客户关系管理系统",
+    "type": "新建"
   },
   "customer": {
     "name": "",
     "industry": "",
-    "requirements": ""
+    "requirements": "CRM系统demo：客户管理、销售机会跟进、联系人管理"
   },
   "metadata": {
-    "createdAt": "",
-    "updatedAt": ""
+    "createdAt": "2026-03-20T00:00:00Z",
+    "updatedAt": "2026-03-20T00:00:00Z"
   }
 }
