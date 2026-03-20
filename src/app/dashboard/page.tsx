@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { opportunitiesMock, formatCurrency, calculatePipelineValue, calculateWeightedPipeline } from "@/mock/opportunities";
 import { contactsMock } from "@/mock/contacts";
-import { getStageLabel, getStageColor, opportunityStages } from "@/types/opportunity";
+import { getStageLabel, getStageBadgeClass, opportunityStages } from "@/types/opportunity";
 import { Users, Target, TrendingUp, DollarSign } from "lucide-react";
 import Link from "next/link";
 
@@ -43,66 +43,78 @@ export default function DashboardPage() {
       <div className="space-y-6 p-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-serif font-medium tracking-wide">仪表盘</h1>
-          <p className="text-muted-foreground mt-1">CRM 系统概览</p>
+          <h1 className="text-3xl font-serif font-medium tracking-tight">仪表盘</h1>
+          <p className="text-sm text-muted-foreground mt-1">CRM 系统概览</p>
         </div>
 
         {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
+          <Card className="card-elevated border-0 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 销售机会
               </CardTitle>
-              <Target className="h-4 w-4 text-muted-foreground" />
+              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Target className="h-4 w-4 text-primary" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{totalOpportunities}</div>
+              <div className="text-3xl font-bold tracking-tight">{totalOpportunities}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 {openOpportunities} 个进行中
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="card-elevated border-0 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-chart-2/5 rounded-full -translate-y-1/2 translate-x-1/2" />
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 本月成交
               </CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              <div className="h-8 w-8 rounded-lg bg-chart-2/10 flex items-center justify-center">
+                <TrendingUp className="h-4 w-4 text-chart-2" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{wonOpportunities}</div>
+              <div className="text-3xl font-bold tracking-tight">{wonOpportunities}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 {formatCurrency(totalValue)}
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="card-elevated border-0 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-chart-4/5 rounded-full -translate-y-1/2 translate-x-1/2" />
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 销售漏斗
               </CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <div className="h-8 w-8 rounded-lg bg-chart-4/10 flex items-center justify-center">
+                <DollarSign className="h-4 w-4 text-chart-4" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(pipelineValue)}</div>
+              <div className="text-3xl font-bold tracking-tight">{formatCurrency(pipelineValue)}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 加权: {formatCurrency(weightedPipeline)}
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="card-elevated border-0 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-chart-3/5 rounded-full -translate-y-1/2 translate-x-1/2" />
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 联系人
               </CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <div className="h-8 w-8 rounded-lg bg-chart-3/10 flex items-center justify-center">
+                <Users className="h-4 w-4 text-chart-3" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{totalContacts}</div>
+              <div className="text-3xl font-bold tracking-tight">{totalContacts}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 {activeContacts} 个活跃
               </p>
@@ -112,7 +124,7 @@ export default function DashboardPage() {
 
         {/* Pipeline Overview */}
         <div className="grid gap-6 lg:grid-cols-2">
-          <Card>
+          <Card className="card-elevated border-0">
             <CardHeader>
               <CardTitle>销售漏斗分布</CardTitle>
             </CardHeader>
@@ -151,7 +163,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="card-elevated border-0">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>最近更新</CardTitle>
@@ -179,7 +191,7 @@ export default function DashboardPage() {
                     <div className="flex flex-col items-end gap-1">
                       <Badge
                         variant="outline"
-                        className={`border-${getStageColor(opp.stage)} text-${getStageColor(opp.stage)}`}
+                        className={getStageBadgeClass(opp.stage)}
                       >
                         {getStageLabel(opp.stage)}
                       </Badge>
@@ -195,7 +207,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Quick Actions */}
-        <Card>
+        <Card className="card-elevated border-0">
           <CardHeader>
             <CardTitle>快速操作</CardTitle>
           </CardHeader>
@@ -203,40 +215,40 @@ export default function DashboardPage() {
             <div className="grid gap-4 md:grid-cols-3">
               <Link
                 href="/opportunities/create"
-                className="flex items-center gap-3 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 hover:bg-primary/10 transition-colors group"
               >
-                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                   <Target className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="font-medium">新建销售机会</p>
-                  <p className="text-sm text-muted-foreground">创建新的商机</p>
+                  <p className="font-medium text-sm">新建销售机会</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">创建新的商机</p>
                 </div>
               </Link>
 
               <Link
                 href="/contacts/create"
-                className="flex items-center gap-3 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                className="flex items-center gap-3 p-4 rounded-xl bg-chart-2/5 hover:bg-chart-2/10 transition-colors group"
               >
-                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Users className="h-5 w-5 text-primary" />
+                <div className="h-10 w-10 rounded-xl bg-chart-2/10 flex items-center justify-center group-hover:bg-chart-2/20 transition-colors">
+                  <Users className="h-5 w-5 text-chart-2" />
                 </div>
                 <div>
-                  <p className="font-medium">新建联系人</p>
-                  <p className="text-sm text-muted-foreground">添加新的联系人</p>
+                  <p className="font-medium text-sm">新建联系人</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">添加新的联系人</p>
                 </div>
               </Link>
 
               <Link
                 href="/customers"
-                className="flex items-center gap-3 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                className="flex items-center gap-3 p-4 rounded-xl bg-chart-3/5 hover:bg-chart-3/10 transition-colors group"
               >
-                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Users className="h-5 w-5 text-primary" />
+                <div className="h-10 w-10 rounded-xl bg-chart-3/10 flex items-center justify-center group-hover:bg-chart-3/20 transition-colors">
+                  <Users className="h-5 w-5 text-chart-3" />
                 </div>
                 <div>
-                  <p className="font-medium">浏览客户</p>
-                  <p className="text-sm text-muted-foreground">查看客户档案</p>
+                  <p className="font-medium text-sm">浏览客户</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">查看客户档案</p>
                 </div>
               </Link>
             </div>

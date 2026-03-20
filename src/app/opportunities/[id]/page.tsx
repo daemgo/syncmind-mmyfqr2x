@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { opportunitiesMock, formatCurrency } from "@/mock/opportunities";
-import { getStageLabel, getStageColor, opportunityStages } from "@/types/opportunity";
+import { getStageLabel, getStageBadgeClass, opportunityStages } from "@/types/opportunity";
 import { ArrowLeft, Edit, Phone, Mail, Calendar } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -69,7 +69,7 @@ export default function OpportunityDetailPage({
                     <p className="font-medium mt-1">
                       <Badge
                         variant="outline"
-                        className={`border-${getStageColor(opportunity.stage)} text-${getStageColor(opportunity.stage)}`}
+                        className={getStageBadgeClass(opportunity.stage)}
                       >
                         {getStageLabel(opportunity.stage)}
                       </Badge>

@@ -22,7 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { opportunitiesMock, formatCurrency } from "@/mock/opportunities";
-import { getStageLabel, getStageColor, OpportunityStage } from "@/types/opportunity";
+import { getStageLabel, getStageBadgeClass, OpportunityStage } from "@/types/opportunity";
 import { Plus, Search, Filter } from "lucide-react";
 import Link from "next/link";
 
@@ -174,7 +174,7 @@ export default function OpportunitiesPage() {
                     <TableCell>
                       <Badge
                         variant="outline"
-                        className={`border-${getStageColor(opp.stage)} text-${getStageColor(opp.stage)}`}
+                        className={getStageBadgeClass(opp.stage)}
                       >
                         {getStageLabel(opp.stage)}
                       </Badge>
